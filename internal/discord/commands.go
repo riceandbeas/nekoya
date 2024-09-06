@@ -14,11 +14,24 @@ var commands = []*discordgo.ApplicationCommand{
 		Name:        "fact",
 		Description: "Replies with a random cat fact",
 	},
+	{
+		Name:        "pic",
+		Description: "Replies with a random cat picture",
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "breed",
+				Description: "The breed of the cat",
+				Required:    false,
+			},
+		},
+	},
 }
 
 var commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
 	"ping": pingHandler,
 	"fact": factHandler,
+	"pic":  picHandler,
 }
 
 func pingHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -57,6 +70,43 @@ func factHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
 			Content: fact,
+		},
+	})
+}
+
+func picHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	catApi, err := apis.NewTheCatApi()
+	if err != nil {
+		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: "Failed to get cat picture :(",
+			},
+		})
+		return
+	}
+
+	opts := i.ApplicationCommandData().Options
+	breed := ""
+	if len(opts) > 0 {
+		breed = opts[0].StringValue()
+	}
+
+	pic, err := catApi.GetRandomImage(breed)
+	if err != nil {
+		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: "Failed to get cat picture :(",
+			},
+		})
+		return
+	}
+
+	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		Data: &discordgo.InteractionResponseData{
+			Content: pic,
 		},
 	})
 }

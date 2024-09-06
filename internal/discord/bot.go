@@ -2,6 +2,7 @@ package discord
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
 
@@ -49,10 +50,18 @@ func (b *Bot) Run() error {
 
 	defer b.Session.Close()
 
-	fmt.Println("Bot is now running. Press CTRL+C to exit.")
+	log.Println("Bot is now running. Press CTRL+C to exit.")
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
 	<-c
+
+	log.Println("Removing commands...")
+	for _, v := range registeredCommands {
+		err := b.Session.ApplicationCommandDelete(b.Session.State.User.ID, b.guildId, v.ID)
+		if err != nil {
+			log.Printf("Error deleting command %s: %v", v.Name, err)
+		}
+	}
 
 	return nil
 }

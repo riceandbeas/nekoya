@@ -2,6 +2,7 @@ package apis
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 )
@@ -21,12 +22,12 @@ func NewCatFactApi() (*CatFactApi, error) {
 	}, nil
 }
 
-func (c *CatFactApi) GetRandomFact() (string, error) {
-	c.url.Path = "/fact"
+func (api *CatFactApi) GetRandomFact() (string, error) {
+	api.url.Path = "/fact"
 
-	resp, err := c.client.Get(c.url.String())
+	resp, err := api.client.Get(api.url.String())
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to get random fact: %w", err)
 	}
 	defer resp.Body.Close()
 
@@ -37,7 +38,7 @@ func (c *CatFactApi) GetRandomFact() (string, error) {
 
 	err = json.NewDecoder(resp.Body).Decode(&fact)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to decode response: %w", err)
 	}
 
 	return fact.Fact, nil
