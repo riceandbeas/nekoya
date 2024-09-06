@@ -10,6 +10,7 @@ import (
 
 type Bot struct {
 	Session *discordgo.Session
+	guildId string
 }
 
 func NewBot(token string) (*Bot, error) {
@@ -20,16 +21,32 @@ func NewBot(token string) (*Bot, error) {
 
 	return &Bot{
 		Session: sess,
+		guildId: os.Getenv("GUILD_ID"),
 	}, nil
 }
 
 func (b *Bot) Run() error {
-	b.Session.AddHandler(b.messageCreate)
-
 	err := b.Session.Open()
 	if err != nil {
 		return fmt.Errorf("Error opening connection: %w", err)
 	}
+
+	b.Session.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		if handler, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
+			handler(s, i)
+		}
+	})
+
+	registeredCommands := make([]*discordgo.ApplicationCommand, len(commands))
+	for i, v := range commands {
+		cmd, err := b.Session.ApplicationCommandCreate(b.Session.State.User.ID, b.guildId, v)
+		if err != nil {
+			return fmt.Errorf("Error creating command: %w", err)
+		}
+
+		registeredCommands[i] = cmd
+	}
+
 	defer b.Session.Close()
 
 	fmt.Println("Bot is now running. Press CTRL+C to exit.")
@@ -38,14 +55,4 @@ func (b *Bot) Run() error {
 	<-c
 
 	return nil
-}
-
-func (b *Bot) messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
-	if m.Author.ID == s.State.User.ID {
-		return
-	}
-
-	if m.Content == "ping" {
-		s.ChannelMessageSend(m.ChannelID, "Pong!")
-	}
 }
