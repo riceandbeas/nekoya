@@ -38,14 +38,9 @@ func (b *Bot) Run() error {
 		}
 	})
 
-	registeredCommands := make([]*discordgo.ApplicationCommand, len(commands))
-	for i, v := range commands {
-		cmd, err := b.Session.ApplicationCommandCreate(b.Session.State.User.ID, b.guildId, v)
-		if err != nil {
-			return fmt.Errorf("Error creating command: %w", err)
-		}
-
-		registeredCommands[i] = cmd
+	err = b.registerCommands()
+	if err != nil {
+		return fmt.Errorf("Error registering commands: %w", err)
 	}
 
 	defer b.Session.Close()
@@ -56,11 +51,9 @@ func (b *Bot) Run() error {
 	<-c
 
 	log.Println("Removing commands...")
-	for _, v := range registeredCommands {
-		err := b.Session.ApplicationCommandDelete(b.Session.State.User.ID, b.guildId, v.ID)
-		if err != nil {
-			log.Printf("Error deleting command %s: %v", v.Name, err)
-		}
+	err = b.removeCommands()
+	if err != nil {
+		return fmt.Errorf("Error removing commands: %w", err)
 	}
 
 	return nil
