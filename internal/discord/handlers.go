@@ -6,18 +6,8 @@ import (
 )
 
 var commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
-	"ping": pingHandler,
 	"fact": factHandler,
 	"pic":  picHandler,
-}
-
-func pingHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseChannelMessageWithSource,
-		Data: &discordgo.InteractionResponseData{
-			Content: "Pong!",
-		},
-	})
 }
 
 func factHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {

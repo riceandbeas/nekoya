@@ -8,10 +8,6 @@ import (
 
 var commands = []*discordgo.ApplicationCommand{
 	{
-		Name:        "ping",
-		Description: "Replies with Pong!",
-	},
-	{
 		Name:        "fact",
 		Description: "Replies with a random cat fact",
 	},
