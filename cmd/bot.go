@@ -17,11 +17,11 @@ var startCmd = &cobra.Command{
 		if profile != "production" {
 			err := godotenv.Load()
 			if err != nil {
-				return err
+				return fmt.Errorf("Error loading env file: %w", err)
 			}
 		}
 
-		log.Println("Starting bot...")
+		log.Println("Creating bot...")
 		bot, err := discord.NewBot(os.Getenv("DISCORD_TOKEN"))
 		if err != nil {
 			return fmt.Errorf("Error creating bot: %w", err)

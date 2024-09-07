@@ -11,7 +11,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVar(&profile, "profile", "development", "application profile (default is development)")
+	rootCmd.PersistentFlags().StringVar(&profile, "profile", "development", "application profile")
 }
 
 func Execute() {
