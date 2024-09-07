@@ -1,6 +1,8 @@
 package discord
 
 import (
+	"log"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/riceandbeas/nekoya/internal/apis"
 )
@@ -34,12 +36,14 @@ func factHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		return
 	}
 
-	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+	if err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
 			Content: fact,
 		},
-	})
+	}); err != nil {
+		handleError(s, i, ErrCommandFailed)
+	}
 }
 
 func picHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -61,12 +65,14 @@ func picHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		return
 	}
 
-	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+	if err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
 			Content: pic,
 		},
-	})
+	}); err != nil {
+		handleError(s, i, ErrCommandFailed)
+	}
 }
 
 func httpHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -85,12 +91,14 @@ func httpHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		return
 	}
 
-	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+	if err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
 			Content: pic,
 		},
-	})
+	}); err != nil {
+		handleError(s, i, ErrCommandFailed)
+	}
 }
 
 func meowHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -100,8 +108,12 @@ func meowHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	switch m.Content {
 	case "what do cats say?":
-		s.ChannelMessageSend(m.ChannelID, "meow!")
+		if _, err := s.ChannelMessageSend(m.ChannelID, "meow!"); err != nil {
+			log.Println("failed to send message:", err)
+		}
 	case "o que gatos dizem?":
-		s.ChannelMessageSend(m.ChannelID, "miau!")
+		if _, err := s.ChannelMessageSend(m.ChannelID, "miau!"); err != nil {
+			log.Println("failed to send message:", err)
+		}
 	}
 }
