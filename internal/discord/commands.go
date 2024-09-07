@@ -23,6 +23,18 @@ var commands = []*discordgo.ApplicationCommand{
 			},
 		},
 	},
+	{
+		Name:        "http",
+		Description: "Replies with a random http cat picture",
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "status_code",
+				Description: "The status code of the http cat",
+				Required:    true,
+			},
+		},
+	},
 }
 
 func (b *Bot) registerCommands() ([]*discordgo.ApplicationCommand, error) {

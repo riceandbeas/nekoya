@@ -8,6 +8,7 @@ import (
 var commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
 	"fact": factHandler,
 	"pic":  picHandler,
+	"http": httpHandler,
 }
 
 func factHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -65,6 +66,40 @@ func picHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
 				Content: "Failed to get cat picture :(",
+			},
+		})
+		return
+	}
+
+	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		Data: &discordgo.InteractionResponseData{
+			Content: pic,
+		},
+	})
+}
+
+func httpHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	httpCatsApi, err := apis.NewHttpCatsApi()
+	if err != nil {
+		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: "Failed to get http cat picture :(",
+			},
+		})
+		return
+	}
+
+	opts := i.ApplicationCommandData().Options
+	statusCode := opts[0].StringValue()
+
+	pic, err := httpCatsApi.GetStatusImage(statusCode)
+	if err != nil {
+		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: "Failed to get http cat picture :(",
 			},
 		})
 		return
