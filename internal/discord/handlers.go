@@ -24,23 +24,13 @@ var commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.Interac
 func factHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	catFactApi, err := apis.NewCatFactApi()
 	if err != nil {
-		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Content: "Failed to get cat fact :(",
-			},
-		})
+		handleError(s, i, ErrCommandFailed)
 		return
 	}
 
 	fact, err := catFactApi.GetRandomFact()
 	if err != nil {
-		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Content: "Failed to get cat fact :(",
-			},
-		})
+		handleError(s, i, ErrCommandFailed)
 		return
 	}
 
@@ -55,12 +45,7 @@ func factHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 func picHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	catApi, err := apis.NewTheCatApi()
 	if err != nil {
-		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Content: "Failed to get cat picture :(",
-			},
-		})
+		handleError(s, i, ErrCommandFailed)
 		return
 	}
 
@@ -72,12 +57,7 @@ func picHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 	pic, err := catApi.GetRandomImage(breed)
 	if err != nil {
-		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Content: "Failed to get cat picture :(",
-			},
-		})
+		handleError(s, i, ErrCommandFailed)
 		return
 	}
 
@@ -92,12 +72,7 @@ func picHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 func httpHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	httpCatsApi, err := apis.NewHttpCatsApi()
 	if err != nil {
-		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Content: "Failed to get http cat picture :(",
-			},
-		})
+		handleError(s, i, ErrCommandFailed)
 		return
 	}
 
@@ -106,12 +81,7 @@ func httpHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 	pic, err := httpCatsApi.GetStatusImage(statusCode)
 	if err != nil {
-		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Content: "Failed to get http cat picture :(",
-			},
-		})
+		handleError(s, i, ErrCommandFailed)
 		return
 	}
 
