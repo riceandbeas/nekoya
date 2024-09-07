@@ -22,7 +22,7 @@ var startCmd = &cobra.Command{
 		}
 
 		log.Println("Creating bot...")
-		bot, err := discord.NewBot(os.Getenv("DISCORD_TOKEN"))
+		bot, err := discord.NewBot(os.Getenv("TOKEN"), os.Getenv("GUILD_ID"))
 		if err != nil {
 			return fmt.Errorf("Error creating bot: %w", err)
 		}

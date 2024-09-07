@@ -14,7 +14,11 @@ type Bot struct {
 	guildId string
 }
 
-func NewBot(token string) (*Bot, error) {
+func NewBot(token, guildId string) (*Bot, error) {
+	if token == "" || guildId == "" {
+		return nil, fmt.Errorf("Token and Guild ID must be provided")
+	}
+
 	sess, err := discordgo.New("Bot " + token)
 	if err != nil {
 		return nil, fmt.Errorf("Error creating Discord session: %w", err)
@@ -22,7 +26,7 @@ func NewBot(token string) (*Bot, error) {
 
 	return &Bot{
 		Session: sess,
-		guildId: os.Getenv("GUILD_ID"),
+		guildId: guildId,
 	}, nil
 }
 
