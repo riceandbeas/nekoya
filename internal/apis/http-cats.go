@@ -30,8 +30,10 @@ func (api *HttpCatsApi) GetStatusImage(status string) (string, error) {
 	}
 	defer resp.Body.Close()
 
+	// user probably entered an invalid status code
 	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("failed to get status image: %s", resp.Status)
+		api.url.Path = "404"
+		return api.url.String(), nil
 	}
 
 	return api.url.String(), nil
