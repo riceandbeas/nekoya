@@ -38,7 +38,7 @@ func (b *Bot) Run() error {
 		}
 	})
 
-	err = b.registerCommands()
+	cmds, err := b.registerCommands()
 	if err != nil {
 		return fmt.Errorf("Error registering commands: %w", err)
 	}
@@ -51,7 +51,7 @@ func (b *Bot) Run() error {
 	<-c
 
 	log.Println("Removing commands...")
-	err = b.removeCommands()
+	err = b.removeCommands(cmds)
 	if err != nil {
 		return fmt.Errorf("Error removing commands: %w", err)
 	}

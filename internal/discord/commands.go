@@ -29,21 +29,22 @@ var commands = []*discordgo.ApplicationCommand{
 	},
 }
 
-func (b *Bot) registerCommands() error {
-	for _, v := range commands {
+func (b *Bot) registerCommands() ([]*discordgo.ApplicationCommand, error) {
+	registeredCommands := make([]*discordgo.ApplicationCommand, len(commands))
+	for i, v := range commands {
 		cmd, err := b.Session.ApplicationCommandCreate(b.Session.State.User.ID, b.guildId, v)
 		if err != nil {
-			return fmt.Errorf("Error creating command: %w", err)
+			return nil, fmt.Errorf("Error creating command: %w", err)
 		}
 
-		commands = append(commands, cmd)
+		registeredCommands[i] = cmd
 	}
 
-	return nil
+	return registeredCommands, nil
 }
 
-func (b *Bot) removeCommands() error {
-	for _, v := range commands {
+func (b *Bot) removeCommands(cmds []*discordgo.ApplicationCommand) error {
+	for _, v := range cmds {
 		err := b.Session.ApplicationCommandDelete(b.Session.State.User.ID, b.guildId, v.ID)
 		if err != nil {
 			return fmt.Errorf("Error deleting command %s: %w", v.Name, err)
