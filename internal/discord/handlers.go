@@ -5,6 +5,16 @@ import (
 	"github.com/riceandbeas/nekoya/internal/apis"
 )
 
+func (b *Bot) addHandlers() {
+	b.Session.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		if handler, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
+			handler(s, i)
+		}
+	})
+
+	b.Session.AddHandler(meowHandler)
+}
+
 var commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
 	"fact": factHandler,
 	"pic":  picHandler,
@@ -111,4 +121,17 @@ func httpHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			Content: pic,
 		},
 	})
+}
+
+func meowHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
+	if m.Author.ID == s.State.User.ID {
+		return
+	}
+
+	switch m.Content {
+	case "what do cats say?":
+		s.ChannelMessageSend(m.ChannelID, "meow!")
+	case "o que gatos dizem?":
+		s.ChannelMessageSend(m.ChannelID, "miau!")
+	}
 }

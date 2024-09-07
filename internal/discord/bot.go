@@ -36,11 +36,7 @@ func (b *Bot) Run() error {
 		return fmt.Errorf("Error opening connection: %w", err)
 	}
 
-	b.Session.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-		if handler, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
-			handler(s, i)
-		}
-	})
+	b.addHandlers()
 
 	cmds, err := b.registerCommands()
 	if err != nil {
