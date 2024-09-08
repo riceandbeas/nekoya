@@ -12,14 +12,14 @@ type CatFactApi struct {
 	client *http.Client
 }
 
-func NewCatFactApi() (*CatFactApi, error) {
+func NewCatFactApi() *CatFactApi {
 	return &CatFactApi{
 		url: url.URL{
 			Scheme: "https",
 			Host:   "catfact.ninja",
 		},
 		client: http.DefaultClient,
-	}, nil
+	}
 }
 
 func (api *CatFactApi) GetRandomFact() (string, error) {

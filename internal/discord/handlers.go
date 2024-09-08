@@ -24,11 +24,7 @@ var commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.Interac
 }
 
 func factHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	catFactApi, err := apis.NewCatFactApi()
-	if err != nil {
-		handleError(s, i, ErrCommandFailed)
-		return
-	}
+	catFactApi := apis.NewCatFactApi()
 
 	fact, err := catFactApi.GetRandomFact()
 	if err != nil {
@@ -47,11 +43,7 @@ func factHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 }
 
 func picHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	catApi, err := apis.NewTheCatApi()
-	if err != nil {
-		handleError(s, i, ErrCommandFailed)
-		return
-	}
+	catApi := apis.NewTheCatApi()
 
 	opts := i.ApplicationCommandData().Options
 	breed := ""
@@ -76,11 +68,7 @@ func picHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 }
 
 func httpHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	httpCatsApi, err := apis.NewHttpCatsApi()
-	if err != nil {
-		handleError(s, i, ErrCommandFailed)
-		return
-	}
+	httpCatsApi := apis.NewHttpCatsApi()
 
 	opts := i.ApplicationCommandData().Options
 	statusCode := opts[0].StringValue()

@@ -11,14 +11,14 @@ type HttpCatsApi struct {
 	client *http.Client
 }
 
-func NewHttpCatsApi() (*HttpCatsApi, error) {
+func NewHttpCatsApi() *HttpCatsApi {
 	return &HttpCatsApi{
 		url: url.URL{
 			Scheme: "https",
 			Host:   "http.cat",
 		},
 		client: http.DefaultClient,
-	}, nil
+	}
 }
 
 func (api *HttpCatsApi) GetStatusImage(status string) (string, error) {

@@ -13,14 +13,14 @@ type TheCatApi struct {
 	client *http.Client
 }
 
-func NewTheCatApi() (*TheCatApi, error) {
+func NewTheCatApi() *TheCatApi {
 	return &TheCatApi{
 		url: url.URL{
 			Scheme: "https",
 			Host:   "api.thecatapi.com",
 		},
 		client: http.DefaultClient,
-	}, nil
+	}
 }
 
 func (api *TheCatApi) GetRandomImage(breed string) (string, error) {
