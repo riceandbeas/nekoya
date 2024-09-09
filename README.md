@@ -60,6 +60,47 @@ The name **Nekoya** is inspired by two sources:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## Usage
+
+### 1. Create a Discord Application
+Set up your Discord bot by creating a new bot on the [Discord Developer Portal](https://discord.com/developers/applications) and invite it to your server.
+
+If not familiar with this process, take a look at the [official documentation](https://discord.com/developers/docs/quick-start/getting-started).
+
+Recommended permissions: `Send Messages`, `Read Message History`, `Use Slash Commands`.
+
+### 2. Clone the Repository
+If you haven't already, clone the Nekoya repository to your local machine:
+```bash
+git clone https://github.com/riceandbeas/nekoya.git
+cd nekoya
+```
+
+### 3. Set Up Environment Variables
+1. Create a `.env` file in the project’s root directory based on the provided [`.env.example`](/.env.example) file:
+```bash
+cp .env.example .env
+```
+
+2. Fill in the necessary values in the `.env` file.
+
+### 4. Install Dependencies
+Ensure all Go module dependencies are downloaded and installed:
+```bash
+go mod download
+```
+
+### 5. Run the Bot
+To start the bot, run the following command:
+```bash
+go run main.go start
+```
+
+### 6. Interact with Nekoya
+Once the bot is running, it will begin listening for interactions in your Discord server.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
